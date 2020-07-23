@@ -1,1 +1,1 @@
-# NodeJS-GMP
+# NodeJS-GMP Homework repository
