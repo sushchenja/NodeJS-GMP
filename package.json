@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "task1": "nodemon homework-1/task1"
+    "task1": "nodemon homework-1/task1",
+    "task2": "nodemon homework-1/task2"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,8 @@
   "homepage": "https://github.com/sushchenja/NodeJS-GMP#readme",
   "devDependencies": {
     "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10"
   }
 }
