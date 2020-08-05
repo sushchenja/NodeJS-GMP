@@ -1,9 +1,10 @@
 import csv from "csvtojson";
 import fs from "fs";
+import path from "path";
 
-const txtDirPath = "./homework-1/txt";
-const csvPath = "homework-1/csv/nodejs-hw1.csv";
-const txtPath = `${txtDirPath}/nodejs-hw1.txt`;
+const txtDirPath = path.resolve(__dirname, "./txt");
+const csvPath = path.resolve(__dirname, "./csv/nodejs-hw1.csv");
+const txtPath = path.resolve(__dirname, "./txt/nodejs-hw1.txt");
 
 if (fs.existsSync(txtDirPath)) {
 	writeCsvToTxt(csvPath, txtPath);
