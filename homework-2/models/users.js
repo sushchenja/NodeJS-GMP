@@ -44,7 +44,9 @@ class User {
     }
 
     update(id, userUpdates) {
-        const userToUpdateIndex = this.users.findIndex(user => user.id === id);
+        const userToUpdateIndex = this.users.findIndex(user => {
+            return user.id === id && !user.isDeleted;
+        });
         let userToUpdate = this.users[userToUpdateIndex];
 
         if (userToUpdate) {
