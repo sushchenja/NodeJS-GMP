@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node homework-2/index.js",
-    "eslint": "eslint ./homework-2/index.js"
+    "start": "nodemon --exec babel-node homework-3/index.js",
+    "eslint": "eslint ./homework-3/index.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,9 @@
     "express": "^4.17.1",
     "express-joi-validation": "^4.0.4-beta.0",
     "joi": "^17.2.1",
+    "pg": "^8.3.3",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5",
     "uuid": "^8.3.0"
   }
 }
