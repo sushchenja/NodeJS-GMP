@@ -16,6 +16,17 @@ export default (sequelize) => {
         },
         age: {
             type: DataTypes.INTEGER
+        },
+        createdAt: {
+            type: DataTypes.DATE
+        },
+        updatedAt: {
+            type: DataTypes.DATE
+        },
+        deletedAt: {
+            type: DataTypes.DATE
         }
+    }, {
+        paranoid: true
     });
 };
