@@ -5,6 +5,7 @@ export default class GroupService {
         this.getAllGroups = this.getAllGroups.bind(this);
         this.getGroup = this.getGroup.bind(this);
         this.removeGroup = this.removeGroup.bind(this);
+        this.updateGroup = this.updateGroup.bind(this);
     }
 
     async addNewGroup(user) {
@@ -21,5 +22,9 @@ export default class GroupService {
 
     async removeGroup(id) {
         return await this.groupDb.destroy(id);
+    }
+
+    async updateGroup(id, groupUpdates) {
+        return await this.groupDb.update(id, groupUpdates);
     }
 }

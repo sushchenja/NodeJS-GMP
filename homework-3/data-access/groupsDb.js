@@ -5,6 +5,7 @@ export default class GroupsDb {
         this.findAll = this.findAll.bind(this);
         this.findByPk = this.findByPk.bind(this);
         this.destroy = this.destroy.bind(this);
+        this.update = this.update.bind(this);
     }
 
     async create(group) {
@@ -25,5 +26,15 @@ export default class GroupsDb {
                 id
             }
         });
+    }
+
+    async update(id, groupUpdates) {
+        const updatedGroup = await this.group.update(groupUpdates, {
+            where: {
+                id
+            },
+            returning: true
+        });
+        return updatedGroup[1];
     }
 }

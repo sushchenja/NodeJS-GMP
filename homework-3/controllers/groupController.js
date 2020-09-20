@@ -9,6 +9,7 @@ export default class GroupController {
         this.getGroup = this.getGroup.bind(this);
         this.removeGroup = this.removeGroup.bind(this);
         this.addUsersToGroup = this.addUsersToGroup.bind(this);
+        this.updateGroup = this.updateGroup.bind(this);
     }
 
     async addNewGroup(req, res) {
@@ -44,6 +45,19 @@ export default class GroupController {
 
         if (removedGroup) {
             res.json(removedGroup);
+        } else {
+            res.status(404).send(GROUP_NOT_FOUND);
+        }
+    }
+
+    async updateGroup(req, res) {
+        const id = req.params.id;
+        const groupUpdates = req.body;
+
+        const updatedGroup = await this.group.updateGroup(id, groupUpdates);
+
+        if (updatedGroup) {
+            res.json(updatedGroup);
         } else {
             res.status(404).send(GROUP_NOT_FOUND);
         }
