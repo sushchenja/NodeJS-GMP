@@ -1,14 +1,16 @@
 import { sequelize } from '../data-access';
-import setupDbMock from '../helpers/setupDbMock';
+import { mockDb } from '../helpers';
 
-export default async () => {
+export default async (isInitialStart) => {
     console.log('Checking database connection...');
     try {
         await sequelize.authenticate();
         console.log('Database connection OK!');
-        console.log('Setting new DB data mock...');
-        await setupDbMock(sequelize);
-        console.log('Mock data added');
+        if (isInitialStart) {
+            console.log('Setting new DB data mock...');
+            await mockDb(sequelize);
+            console.log('Mock data added');
+        }
     } catch (error) {
         console.log('Unable to connect to the database:');
         console.log(error.message);

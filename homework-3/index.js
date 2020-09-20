@@ -9,7 +9,7 @@ const init = async () => {
     console.log(`Starting Sequelize + Express example on port ${port}...`);
     const app = express();
     app.use('/', routes);
-    config.isInitialStart && await dbLoader();
+    await dbLoader(config.isInitialStart);
     app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
 };
 

@@ -1,23 +1,18 @@
 import { DataTypes } from 'sequelize';
 
 export default (sequelize) => {
-    sequelize.define('user', {
+    sequelize.define('group', {
         id: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        login: {
+        name: {
             type: DataTypes.STRING
         },
-        password: {
-            type: DataTypes.STRING
-        },
-        age: {
-            type: DataTypes.INTEGER
+        permissions: {
+            type: DataTypes.ARRAY(DataTypes.STRING)
         }
-    }, {
-        paranoid: true
     });
 };
