@@ -5,7 +5,9 @@ import UserGroupsDb from './userGroupsDb';
 import config from '../config';
 import * as modelDefiners from '../models';
 
-const sequelize = new Sequelize(config.databaseURL);
+const sequelize = new Sequelize(config.databaseURL, {
+    logging: false
+});
 
 for (const modelDefiner of Object.values(modelDefiners)) {
     modelDefiner(sequelize);
