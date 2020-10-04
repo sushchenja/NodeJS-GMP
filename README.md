@@ -9,6 +9,8 @@ To run: `npm run start`
 
 Logs placed at `logs/app.log`
 
+To run custom logger add `USE_CUSTOM_LOGGER` variable
+
 ### Evaluation criteria:
 
 * 2.Custom logger based on console.log is added instead of Loggerpackage.

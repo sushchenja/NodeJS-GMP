@@ -5,5 +5,6 @@ dotenv.config();
 export default {
     port: process.env.PORT,
     databaseURL: process.env.DATABASE_URI,
-    isInitialStart: process.env.IS_INITIAL_START
+    isInitialStart: process.env.IS_INITIAL_START,
+    useCustomLogger: process.env.USE_CUSTOM_LOGGER
 };

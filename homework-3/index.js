@@ -2,15 +2,17 @@ import express from 'express';
 import routes from './routes';
 import config from './config';
 import { dbLoader } from './loaders';
-import { handleError, winston, logRequest } from './helpers';
+import { handleError, winston, morganLogger, customLogger } from './helpers';
 
 const port = config.port || 3000;
+const logger = config.useCustomLogger ? customLogger : morganLogger;
 
 
 const init = async () => {
     console.log(`Starting Sequelize + Express example on port ${port}...`);
     const app = express();
-    app.use(logRequest(winston.stream));
+    app.use(express.json());
+    app.use(logger(winston.stream));
     app.use('/', routes);
     await dbLoader(config.isInitialStart);
     app.use(handleError(winston));
