@@ -1,5 +1,4 @@
-const GROUP_NOT_FOUND = 'Group with such id is not found';
-
+import { ErrorHandler } from '../helpers';
 export default class GroupController {
     constructor(group, userGroup) {
         this.group = group;
@@ -12,63 +11,98 @@ export default class GroupController {
         this.updateGroup = this.updateGroup.bind(this);
     }
 
-    async addNewGroup(req, res) {
+    async addNewGroup(req, res, next) {
         const group = req.body;
 
-        const newGroup = await this.group.addNewGroup(group);
+        try {
+            const newGroup = await this.group.addNewGroup(group);
 
-        res.json(newGroup);
-    }
-
-    async getAllGroups(req, res) {
-        const groups = await this.group.getAllGroups();
-
-        res.json(groups);
-    }
-
-    async getGroup(req, res) {
-        const id = req.params.id;
-
-        const group = await this.group.getGroup(id);
-
-        if (group) {
-            res.json(group);
-        } else {
-            res.status(404).send(GROUP_NOT_FOUND);
+            if (newGroup) {
+                res.json(newGroup);
+            } else {
+                throw new ErrorHandler('Failed to create group', 500);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.group.addNewGroup, { group }, error));
         }
     }
 
-    async removeGroup(req, res) {
-        const id = req.params.id;
+    async getAllGroups(req, res, next) {
+        try {
+            const groups = await this.group.getAllGroups();
 
-        const removedGroup = await this.group.removeGroup(id);
-
-        if (removedGroup) {
-            res.json(removedGroup);
-        } else {
-            res.status(404).send(GROUP_NOT_FOUND);
+            if (groups.length) {
+                res.json(groups);
+            } else {
+                throw new ErrorHandler('No groups', 404);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.group.getAllGroups, {}, error));
         }
     }
 
-    async updateGroup(req, res) {
+    async getGroup(req, res, next) {
+        const id = req.params.id;
+
+        try {
+            const group = await this.group.getGroup(id);
+
+            if (group) {
+                res.json(group);
+            } else {
+                throw new ErrorHandler(`Group with ID ${id} is not found`, 404);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.group.getGroup, { id }, error));
+        }
+    }
+
+    async removeGroup(req, res, next) {
+        const id = req.params.id;
+        try {
+            const removedGroup = await this.group.removeGroup(id);
+
+            if (removedGroup) {
+                res.json(removedGroup);
+            } else {
+                throw new ErrorHandler(`Group with ID ${id} is not found`, 404);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.group.removeGroup, { id }, error));
+        }
+    }
+
+    async updateGroup(req, res, next) {
         const id = req.params.id;
         const groupUpdates = req.body;
 
-        const updatedGroup = await this.group.updateGroup(id, groupUpdates);
+        try {
+            const updatedGroup = await this.group.updateGroup(id, groupUpdates);
 
-        if (updatedGroup) {
-            res.json(updatedGroup);
-        } else {
-            res.status(404).send(GROUP_NOT_FOUND);
+            if (updatedGroup) {
+                res.json(updatedGroup);
+            } else {
+                throw new ErrorHandler(`Group with ID ${id} is not found`, 404);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.group.updateGroup, { id, groupUpdates }, error));
         }
     }
 
-    async addUsersToGroup(req, res) {
+    async addUsersToGroup(req, res, next) {
         const id = req.params.id;
         const { id: userIds } = req.query;
 
-        const addedUsers = await this.userGroup.addUsersToGroup(id, userIds);
+        try {
+            const addedUsers = await this.userGroup.addUsersToGroup(id, userIds);
 
-        res.send(addedUsers);
+            if (addedUsers) {
+                res.send(addedUsers);
+            } else {
+                throw new ErrorHandler('Failed add users to group', 500);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.group.addUsersToGroup, { id, userIds }, error));
+        }
     }
 }

@@ -1,4 +1,4 @@
-const USER_NOT_FOUND = 'User with such id is not found';
+import { ErrorHandler } from '../helpers';
 
 export default class UserController {
     constructor(user) {
@@ -10,56 +10,84 @@ export default class UserController {
         this.removeUser = this.removeUser.bind(this);
     }
 
-    async addNewUser(req, res) {
+    async addNewUser(req, res, next) {
         const user = req.body;
 
-        const newUser = await this.user.addNewUser(user);
+        try {
+            const newUser = await this.user.addNewUser(user);
 
-        res.json(newUser);
+            if (newUser) {
+                res.json(newUser);
+            } else {
+                throw new ErrorHandler('Failed to create user', 500);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.user.addNewUser, { user }, error));
+        }
     }
 
-    async getAllUsers(req, res) {
+    async getAllUsers(req, res, next) {
         const { login, limit  } = req.query;
 
-        const suggestedUsers = await this.user.getAllUsers(login, limit);
+        try {
+            const suggestedUsers = await this.user.getAllUsers(login, limit);
 
-        res.json(suggestedUsers);
+            if (suggestedUsers.length) {
+                res.json(suggestedUsers);
+            } else {
+                throw new ErrorHandler(`No users containing ${login} in login`, 404);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.user.getAllUsers, { login, limit }, error));
+        }
     }
 
-    async updateUser(req, res) {
+    async updateUser(req, res, next) {
         const id = req.params.id;
         const userUpdates = req.body;
 
-        const updatedUser = await this.user.updateUser(id, userUpdates);
+        try {
+            const updatedUser = await this.user.updateUser(id, userUpdates);
 
-        if (updatedUser) {
-            res.json(updatedUser);
-        } else {
-            res.status(404).send(USER_NOT_FOUND);
+            if (updatedUser) {
+                res.json(updatedUser);
+            } else {
+                throw new ErrorHandler(`User with ID ${id} is not found`, 404);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.user.updateUser, { id, userUpdates }, error));
         }
     }
 
-    async getUser(req, res) {
+    async getUser(req, res, next) {
         const id = req.params.id;
 
-        const user = await this.user.getUser(id);
+        try {
+            const user = await this.user.getUser(id);
 
-        if (user) {
-            res.json(user);
-        } else {
-            res.status(404).send(USER_NOT_FOUND);
+            if (user) {
+                res.json(user);
+            } else {
+                throw new ErrorHandler(`User with ID ${id} is not found`, 404);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.user.getUser, { id }, error));
         }
     }
 
-    async removeUser(req, res) {
+    async removeUser(req, res, next) {
         const id = req.params.id;
 
-        const removedUser = await this.user.removeUser(id);
+        try {
+            const removedUser = await this.user.removeUser(id);
 
-        if (removedUser) {
-            res.json(removedUser);
-        } else {
-            res.status(404).send(USER_NOT_FOUND);
+            if (removedUser) {
+                res.json(removedUser);
+            } else {
+                throw new ErrorHandler(`User with ID ${id} is not found`, 404);
+            }
+        } catch (error) {
+            return next(ErrorHandler.wrap(this.user.removeUser, { id }, error));
         }
     }
 }
