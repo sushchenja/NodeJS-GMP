@@ -8,6 +8,7 @@ export default class UsersDb {
         this.update = this.update.bind(this);
         this.findByPk = this.findByPk.bind(this);
         this.destroy = this.destroy.bind(this);
+        this.findByLoginAndPassword = this.findByLoginAndPassword.bind(this);
     }
 
     async create(user) {
@@ -49,6 +50,15 @@ export default class UsersDb {
         return await this.user.destroy({
             where: {
                 id
+            }
+        });
+    }
+
+    async findByLoginAndPassword(login, password) {
+        return await this.user.findOne({
+            where: {
+                login,
+                password
             }
         });
     }
