@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import routes from './routes';
 import config from './config';
@@ -11,6 +12,7 @@ const logger = config.useCustomLogger ? customLogger : morganLogger;
 const init = async () => {
     console.log(`Starting Sequelize + Express example on port ${port}...`);
     const app = express();
+    app.use(cors());
     app.use(express.json());
     app.use(logger(winston.stream));
     app.use('/', routes);
