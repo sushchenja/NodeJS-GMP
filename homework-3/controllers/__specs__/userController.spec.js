@@ -26,70 +26,34 @@ describe('UserController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = { body: INVALID_DATA };
-            const getInvalidError = async () => {
+        describe('when user is not created due to invalid data is provided', () => {
+            test('should call next callback with "Failed to create user" 500 error', async () => {
+                const requestData = { body: INVALID_DATA };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.addNewUser(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Failed to create user" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('Failed to create user');
-            });
-
-            test('error should have 500 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(500);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.user).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('addNewUser');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = { body: ERROR };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = { body: ERROR };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.addNewUser(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.user).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('addNewUser');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -108,82 +72,44 @@ describe('UserController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = {
-                query: {
-                    login: INVALID_DATA,
-                    limit: INVALID_DATA
-                }
-            };
-
-            const getInvalidError = async () => {
+        describe('when users are not found due invalid data is provided', () => {
+            test('should call next callback with "No users containing userData in login" 404 error', async () => {
+                const requestData = {
+                    query: {
+                        login: INVALID_DATA,
+                        limit: INVALID_DATA
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.getAllUsers(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "No users containing userData in login" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('No users containing invalidData in login');
-            });
-
-            test('error should have 404 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(404);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.login).toBe(requestData.query.login);
                 expect(error.controllerData.arguments.limit).toBe(requestData.query.limit);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('getAllUsers');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = { query: {
-                login: ERROR,
-                limit: ERROR
-            } };
-
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = { query: {
+                    login: ERROR,
+                    limit: ERROR
+                } };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.getAllUsers(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.login).toBe(requestData.query.login);
                 expect(error.controllerData.arguments.limit).toBe(requestData.query.limit);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('getAllUsers');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -204,82 +130,46 @@ describe('UserController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = {
-                params: {
-                    id: INVALID_DATA
-                },
-                body: INVALID_DATA
-            };
-            const getInvalidError = async () => {
+        describe('when an user is not found due to invalid data is provided', () => {
+            test('should call next callback with "User with ID invalidData is not found" 404 error', async () => {
+                const requestData = {
+                    params: {
+                        id: INVALID_DATA
+                    },
+                    body: INVALID_DATA
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.updateUser(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "User with ID invalidData is not found" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('User with ID invalidData is not found');
-            });
-
-            test('error should have 404 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(404);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
                 expect(error.controllerData.arguments.userUpdates).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('updateUser');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = {
-                params: {
-                    id: ERROR
-                },
-                body: ERROR
-            };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = {
+                    params: {
+                        id: ERROR
+                    },
+                    body: ERROR
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.updateUser(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
                 expect(error.controllerData.arguments.userUpdates).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('updateUser');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -299,78 +189,42 @@ describe('UserController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = {
-                params: {
-                    id: INVALID_DATA
-                }
-            };
-            const getInvalidError = async () => {
+        describe('when an user is not found due to invalid data is provided', () => {
+            test('should call next callback with "User with ID invalidData is not found" 404 error on invalid data', async () => {
+                const requestData = {
+                    params: {
+                        id: INVALID_DATA
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.getUser(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "User with ID invalidData is not found" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('User with ID invalidData is not found');
-            });
-
-            test('error should have 404 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(404);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('getUser');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = {
-                params: {
-                    id: ERROR
-                }
-            };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = {
+                    params: {
+                        id: ERROR
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.getUser(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('getUser');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -390,78 +244,42 @@ describe('UserController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = {
-                params: {
-                    id: INVALID_DATA
-                }
-            };
-            const getInvalidError = async () => {
+        describe('when an user is not found due to invalid data is provided', () => {
+            test('should call next callback with "User with ID invalidData is not found" 404 error', async () => {
+                const requestData = {
+                    params: {
+                        id: INVALID_DATA
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.removeUser(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "User with ID invalidData is not found" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('User with ID invalidData is not found');
-            });
-
-            test('error should have 404 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(404);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('removeUser');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = {
-                params: {
-                    id: ERROR
-                }
-            };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = {
+                    params: {
+                        id: ERROR
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.removeUser(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('removeUser');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });

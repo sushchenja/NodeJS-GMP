@@ -29,70 +29,34 @@ describe('GroupController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = { body: INVALID_DATA };
-            const getInvalidError = async () => {
+        describe('when a group is not created due to invalid data is provided', () => {
+            test('should call next callback with "Failed to create group" 500 error', async () => {
+                const requestData = { body: INVALID_DATA };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.addNewGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error =  next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Failed to create group" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('Failed to create group');
-            });
-
-            test('error should have 500 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(500);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.group).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('addNewGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = { body: ERROR };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = { body: ERROR };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.addNewGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.group).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('addNewGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -108,68 +72,32 @@ describe('GroupController', () => {
             });
         });
 
-        describe('when no groups to return', () => {
-            const getInvalidError = async () => {
+        describe('when groups are not returned due to invalid data is provided', () => {
+            test('should call next callback with "No groups" 404 error', async () => {
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.getAllGroups({}, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "No groups" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('No groups');
-            });
-
-            test('error should have 404 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(404);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments).toMatchObject({});
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('getAllGroups');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.getAllGroups({}, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error =  next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments).toMatchObject({});
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('getAllGroups');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -189,78 +117,42 @@ describe('GroupController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = {
-                params: {
-                    id: INVALID_DATA
-                }
-            };
-            const getInvalidError = async () => {
+        describe('when a group is not returned due to invalid data is provided', () => {
+            test('should call next callback with "Group with ID invalidData is not found" 404 error', async () => {
+                const requestData = {
+                    params: {
+                        id: INVALID_DATA
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.getGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Group with ID invalidData is not found" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('Group with ID invalidData is not found');
-            });
-
-            test('error should have 404 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(404);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('getGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = {
-                params: {
-                    id: ERROR
-                }
-            };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = {
+                    params: {
+                        id: ERROR
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.getGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error =  next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('getGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -280,78 +172,42 @@ describe('GroupController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = {
-                params: {
-                    id: INVALID_DATA
-                }
-            };
-            const getInvalidError = async () => {
+        describe('when a group is not removed due to invalid data is provided', () => {
+            test('should call next callback with "Group with ID invalidData is not found" 404 error', async () => {
+                const requestData = {
+                    params: {
+                        id: INVALID_DATA
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.removeGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Group with ID invalidData is not found" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('Group with ID invalidData is not found');
-            });
-
-            test('error should have 404 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(404);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('removeGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = {
-                params: {
-                    id: ERROR
-                }
-            };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = {
+                    params: {
+                        id: ERROR
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.removeGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('removeGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -372,82 +228,46 @@ describe('GroupController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = {
-                params: {
-                    id: INVALID_DATA
-                },
-                body: INVALID_DATA
-            };
-            const getInvalidError = async () => {
+        describe('when a group is not updated due to invalid data is provided', () => {
+            test('should call next callback with "Group with ID invalidData is not found" 404 error', async () => {
+                const requestData = {
+                    params: {
+                        id: INVALID_DATA
+                    },
+                    body: INVALID_DATA
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.updateGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Group with ID invalidData is not found" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('Group with ID invalidData is not found');
-            });
-
-            test('error should have 404 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(404);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
                 expect(error.controllerData.arguments.groupUpdates).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('updateGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = {
-                params: {
-                    id: ERROR
-                },
-                body: ERROR
-            };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = {
+                    params: {
+                        id: ERROR
+                    },
+                    body: ERROR
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.updateGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
                 expect(error.controllerData.arguments.groupUpdates).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('updateGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
@@ -470,86 +290,50 @@ describe('GroupController', () => {
             });
         });
 
-        describe('when invalid data is provided', () => {
-            const requestData = {
-                params: {
-                    id: INVALID_DATA
-                },
-                query: {
-                    id: INVALID_DATA
-                }
-            };
-            const getInvalidError = async () => {
+        describe('when group is not added to group due to invalid data is provided', () => {
+            test('should call next callback with "Failed add users to group" 500 error', async () => {
+                const requestData = {
+                    params: {
+                        id: INVALID_DATA
+                    },
+                    query: {
+                        id: INVALID_DATA
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithEmptyResult.addUsersToGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on invalid data', async () => {
-                const error = await getInvalidError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Failed add users to group" message', async () => {
-                const error = await getInvalidError();
                 expect(error.message).toBe('Failed add users to group');
-            });
-
-            test('error should have 500 status', async () => {
-                const error = await getInvalidError();
                 expect(error.statusCode).toBe(500);
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
                 expect(error.controllerData.arguments.groupUpdates).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getInvalidError();
                 expect(error.controllerData.method).toBe('addUsersToGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
 
         describe('when service error is happened',  () => {
-            const requestData = {
-                params: {
-                    id: ERROR
-                },
-                query: {
-                    id: ERROR
-                }
-            };
-            const getServiceError = async () => {
+            test('should call next callback with "Service error"', async () => {
+                const requestData = {
+                    params: {
+                        id: ERROR
+                    },
+                    query: {
+                        id: ERROR
+                    }
+                };
                 const res = setupResponse();
                 const next = setupNext();
-
                 await controllerWithServiceError.addUsersToGroup(requestData, res, next);
-                return next.mock.calls[0][0];
-            };
+                const error = next.mock.calls[0][0];
 
-            test('should call next callback with error on service error', async () => {
-                const error = await getServiceError();
-                expect(error instanceof Error).toBe(true);
-            });
-
-            test('error should contain "Service error" message', async () => {
-                const error = await getServiceError();
                 expect(error.message).toBe('Service error');
-            });
-
-            test('error should contain method arguments', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.arguments.id).toBe(requestData.params.id);
                 expect(error.controllerData.arguments.groupUpdates).toBe(requestData.body);
-            });
-
-            test('error should contain method name', async () => {
-                const error = await getServiceError();
                 expect(error.controllerData.method).toBe('addUsersToGroup');
+                expect(error instanceof Error).toBe(true);
             });
         });
     });
